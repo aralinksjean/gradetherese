@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scratch Starter Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7e6;--panel:#fff;--ink:#2b2b4a;--purple:#855cd6;--motion:#4c97ff;--looks:#9966ff;--sound:#cf63cf;--events:#ffbf00;--control:#ffab19;--vars:#ff8c1a;--w:min(92vw,480px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:500 18px/1.4 Fredoka,system-ui,sans-serif;padding:0 12px env(safe-area-inset-bottom,0)}
+header{background:var(--purple);color:#fff;margin:0 -12px;padding:calc(10px + env(safe-area-inset-top,0)) 14px 12px}
+.wrap{max-width:1000px;margin:0 auto}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+h1{font-size:1.5rem;margin:0}
+.pill{background:#fff3;color:#fff;border:0;border-radius:99px;padding:4px 14px;font:inherit;font-size:.95rem;cursor:pointer}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+nav button{width:44px;height:44px;border-radius:50%;border:3px solid #fff7;background:#0003;color:#fff;font:700 1.1rem Fredoka;cursor:pointer}
+nav button.done{background:#3cb371}nav button.cur{border-color:#ffd84a;box-shadow:0 0 0 3px #ffd84a88}
+#brief{background:var(--panel);border-radius:18px;padding:12px 16px;margin:14px 0;border:3px solid #ffd9a0}
+#brief h2{margin:0 0 2px;font-size:1.3rem;color:var(--purple)}#brief p{margin:0}
+details{margin-top:6px;font-size:.9rem;color:#6a6a95}summary{cursor:pointer}
+.main{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+@media(max-width:860px){.main{grid-template-columns:1fr}}
+#stagebox{display:flex;flex-direction:column;align-items:center;gap:8px}
+#stage{position:relative;width:var(--w);height:calc(var(--w)*.75);border-radius:16px;overflow:hidden;border:5px solid #fff;box-shadow:0 4px 14px #0002;
+background:linear-gradient(#0000 calc(100% - 1px),#ffffffaa 0) 0 0/100% 16.6667%,linear-gradient(90deg,#0000 calc(100% - 1px),#ffffffaa 0) 0 0/12.5% 100%,linear-gradient(#bfe8ff,#e8f7d8)}
+.sp{position:absolute;width:calc(var(--w)/8);height:calc(var(--w)/8);margin:calc(var(--w)/-16) 0 0 calc(var(--w)/-16);display:flex;align-items:center;justify-content:center;font-size:calc(var(--w)*.07);transition:left .3s,top .3s}
+#cat{z-index:3}.arr{position:absolute;inset:0;display:flex;justify-content:center;color:#e0457b;font-style:normal;font-size:calc(var(--w)*.04);line-height:1;transition:transform .3s}
+.bubble{position:absolute;bottom:92%;left:50%;transform:translateX(-30%);background:#fff;color:#222;border:2px solid #999;border-radius:16px;padding:2px 10px;font-size:calc(var(--w)*.04);white-space:nowrap;z-index:9}
+.pop{animation:pp .4s}@keyframes pp{50%{transform:scale(1.6)}}
+@media(prefers-reduced-motion:reduce){.pop{animation:none}.sp,.arr{transition:none}}
+#hud{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;font-size:.95rem}
+#msg{min-height:3em;text-align:center;max-width:var(--w);font-weight:700}#msg.bad{color:#c2410c}#msg.good{color:#15803d}
+.panel{background:var(--panel);border-radius:18px;padding:12px;border:3px solid #ffd9a0}
+.lab{font-size:.95rem;color:#6a6a95;margin:2px 0 6px}
+#script{min-height:170px;max-height:50vh;overflow:auto;background:#fff1da;border-radius:14px;padding:10px;margin-bottom:12px}
+.hat{display:inline-block;background:var(--events);color:#4a3500;font-weight:700;border-radius:20px 20px 6px 6px;padding:6px 14px;margin-bottom:4px}
+.blk{margin:3px 0;border-radius:8px;color:#fff;border:1px solid #0003}
+.blk.motion{background:var(--motion)}.blk.looks{background:var(--looks)}.blk.sound{background:var(--sound)}.blk.control{background:var(--control);color:#3a2400}.blk.vars{background:var(--vars);color:#3a1c00}
+.blk.on{outline:4px solid #333;box-shadow:0 0 12px #0006}
+.row{display:flex;align-items:center;gap:6px;padding:8px 12px;font-weight:700;min-height:46px;flex-wrap:wrap;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.row button{border:0;border-radius:99px;background:#fff;color:#333;font:700 1rem Fredoka;padding:2px 12px;min-height:30px;cursor:pointer}
+.row .x{margin-left:auto;width:30px;padding:0;background:#0004;color:#fff}
+.zone{margin:0 8px 8px 24px;padding:4px 6px;border-left:8px solid #0003;background:#0002;border-radius:0 8px 8px 0;min-height:36px;cursor:pointer}.zone.tgt{background:#fff6;border-left-color:#fff}.zone.over{background:#fff8}
+.zone:empty::before{content:'drop blocks here';font-size:.85rem;opacity:.7;font-weight:500}
+.ph{height:14px;margin:3px 0;border-radius:7px;background:#2b2b4a}
+.pal{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.pal button{border:0;border-radius:12px;padding:10px 14px;min-height:52px;font:700 1rem Fredoka;cursor:grab;color:#fff;touch-action:none;user-select:none;-webkit-user-select:none}
+.pal .motion{background:var(--motion)}.pal .looks{background:var(--looks)}.pal .sound{background:var(--sound)}.pal .control{background:var(--control);color:#3a2400}.pal .vars{background:var(--vars);color:#3a1c00}
+.pal button:disabled{opacity:.35;cursor:not-allowed}#pal.trash{outline:4px dashed #e0457b;outline-offset:5px;border-radius:12px}
+.ctl{display:flex;gap:8px}.ctl button{flex:1;border:0;border-radius:99px;padding:14px;font:700 1.15rem Fredoka;cursor:pointer;color:#fff}
+#run{background:#3cb371}#run.stop{background:#e0457b}#reset{background:#f59e0b}#clear{background:#8b8baf}
+body.dragging,body.dragging *{cursor:grabbing!important;user-select:none}
+.ghost{position:fixed;z-index:50;pointer-events:none;padding:8px 14px;font-weight:700;opacity:.93;box-shadow:0 10px 24px #0007;transform:rotate(-2deg);border-radius:8px}
+button:focus-visible{outline:4px solid #333;outline-offset:2px}
+#ov{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}#ov.show{display:flex}
+#card{background:#fff;color:var(--ink);border-radius:26px;padding:24px;max-width:460px;width:100%;text-align:center}
+#card h2{margin:0 0 6px;font-size:1.8rem}.big{font-size:3rem}
+#card button,#card input{font:700 1.1rem Fredoka;border-radius:99px;padding:10px 22px;border:3px solid var(--purple);margin:6px 4px}#card button{background:var(--purple);color:#fff;cursor:pointer}
+.cert{border:6px double var(--control);border-radius:16px;padding:14px;margin:10px 0}
+@media print{body{background:#fff}header,.main,#brief{display:none}#ov{position:static;background:none;display:block}#card button,#card input{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="top"><h1>🐱 Scratch Starter Lab</h1><span class="pill" id="clock">⏱ 00:00</span><span><button class="pill" id="spd">🐢 Slow</button> <button class="pill" id="mute">🔊 Sound on</button></span></div>
+<nav id="nav" aria-label="Missions"></nav>
+</div></header>
+<div class="wrap">
+<div id="brief"><h2 id="st"></h2><p id="sp"></p><details><summary>Teacher tip</summary><span id="tip"></span></details></div>
+<div class="main">
+<div id="stagebox"><div id="stage" aria-label="Stage"></div>
+<div id="hud"><span>x: <b id="hx">0</b></span><span>y: <b id="hy">0</b></span><span>direction: <b id="hd">90</b></span><span>⭐ score <b id="hs">0</b></span><span>Blocks <b id="hb">0</b></span></div>
+<div id="msg" role="status"></div></div>
+<div class="panel">
+<div class="lab">Drag blocks into your code (or tap them). Every move block moves 1 unit, which is one square.</div>
+<div id="script" aria-label="Your code"></div>
+<div class="lab">Blocks</div>
+<div class="pal" id="pal"></div>
+<div class="ctl"><button id="run">🏁 Go!</button><button id="reset">↺ Back</button><button id="clear">🗑 Clear</button></div>
+</div></div></div>
+<div id="ov"><div id="card"></div></div>
+
+<script>
+var $=function(s){return document.querySelector(s)};
+var B={move:{i:'🐾',p:'move 1 unit',c:'motion'},
+turnR:{i:'↻',p:'turn right 90°',c:'motion'},turnL:{i:'↺',p:'turn left 90°',c:'motion'},
+bounce:{i:'↩️',p:'if on edge, bounce',c:'motion'},
+say:{i:'💬',p:'say Hello! for 2 seconds',c:'looks'},sound:{i:'🔊',p:'start sound pop',c:'sound'},
+wait:{i:'⏳',p:'wait 1 seconds',c:'control'},rep:{p:'repeat',c:'control',C:1,rn:1},forever:{p:'forever',c:'control',C:1},
+if:{p:'if',c:'control',C:1,cond:1},stop:{i:'🛑',p:'stop all',c:'control'},add:{i:'➕',p:'change score by 1',c:'vars'}};
+var CN={star:'touching star?'};
+var W=8,H=6;
+var uid=0;
+function mk(t,o,body){var n={id:++uid,t:t,n:3,v:B[t].def,cond:'star',body:body||[]};for(var k in o)n[k]=o[k];return n}
+function lab(k){return(B[k].i?B[k].i+' ':'')+B[k].p.replace('#',B[k].def)}
+var MV=['move','turnR','turnL'];
+var LV=[
+{t:'Mission 1: Move!',s:'The stage is a grid of squares. Each 🐾 move block moves the cat 1 unit, which is one square. Walk her to the star ⭐!',tip:'Count squares aloud as blocks are added. The x number in the info row goes up by 1 for each move. About 5 minutes.',start:[0,2,90],stars:[[4,2]],allow:['move'],conds:[],max:6,par:4},
+{t:'Mission 2: Turn',s:'Collect both stars! The cat moves the way the pink arrow points. Use turn blocks to change direction, then move again.',tip:'Turning left 90° points her up. Notice direction in the info row changes from 90 to 0. About 7 minutes.',start:[0,0,90],stars:[[4,0],[4,3]],allow:MV.concat('rep'),conds:[],max:10,par:5},
+{t:'Mission 3: Square Trip',s:'Visit all 3 stars at the corners of a square. You only get 5 blocks, so put a repeat inside a repeat!',tip:'Pattern: 3 moves, turn left, and do that 3 times. Draw the square on the board first. About 8 minutes.',start:[1,1,90],stars:[[4,1],[4,4],[1,4]],allow:MV.concat('rep'),conds:[],max:5,par:4},
+{t:'Mission 4: Say Hello',s:'Walk to your friend 🐶. When you arrive, make the cat say 💬 hello and start a 🔊 sound. Do it only when you get there!',tip:'Order of blocks matters: move first, then say and sound. About 6 minutes.',start:[0,3,90],stars:[],goal:[6,3],ge:'🐶',allow:MV.concat('rep','say','sound','wait'),conds:[],max:8,par:4,need:'both'},
+{t:'Mission 5: Forever and Bounce',s:'The star is behind the cat! Use forever, move, if on edge bounce, and if touching star then stop all. What happens without the bounce block?',tip:'Try it without bounce so kids see the cat stuck at the edge. Sensing + loops + stop all. About 9 minutes.',start:[3,2,90],stars:[[1,2]],allow:['move','bounce','forever','if','stop'],conds:['star'],max:6,par:5},
+{t:'Mission 6: Spin and Shout',s:'Make the cat spin all the way around (4 turns of 90° = 360°) and then say hello! Can you do it with just 3 blocks?',tip:'Four turns of 90 make a full circle. Watch the direction number change. About 6 minutes.',start:[3,2,0],stars:[],allow:['turnR','turnL','rep','say','sound','wait'],conds:[],max:5,par:3,need:'spin'},
+{t:'Mission 7: Score Keeper',s:'A variable remembers a number! The score must be exactly 3 after the cat visits all 3 stars. Add a change score by 1 block after each move.',tip:'Put move and change score together inside a repeat. Watch the score counter go up. About 8 minutes.',start:[0,2,90],stars:[[1,2],[2,2],[3,2]],allow:['move','rep','add'],conds:[],max:5,par:3,need:'score'},
+{t:'Mission 8: If Touching',s:'Only some squares have stars, and they stay put. Move one unit at a time and ask: if touching star, then change score by 1. Get a score of 3!',tip:'Why do we need the if block? Because only some squares have stars. About 9 minutes.',start:[0,2,90],stars:[[1,2],[4,2],[6,2]],manual:1,allow:['move','rep','if','add','say'],conds:['star'],max:6,par:4,need:'score'},
+{t:'Mission 9: Bug Hunt 🐛',s:'A bug is hiding! This code should collect both stars, but the cat never gets there. Find 2 bugs and fix them. Hint: check the repeat number and the turn.',tip:'Bugs: first repeat is 2 (should be 3), and it turns right instead of left. Tap to fix the number, then swap the turn block. About 8 minutes.',start:[0,0,90],stars:[[3,0],[3,3]],allow:MV.concat('rep'),conds:[],max:8,par:5,
+pre:function(){return[mk('rep',{n:2},[mk('move')]),mk('turnR'),mk('rep',{n:3},[mk('move')])]}},
+{t:'Mission 10: Cat Party 🎉',s:'Make your own cat party! Use at least 6 blocks, with a loop, a turn, a say block and a sound block. Then show a friend.',tip:'Open-ended. If kids use forever, remind them about stop all. Ask each pair to explain their code. About 8 minutes.',start:[3,2,90],stars:[[6,4],[0,0]],allow:['move','turnR','turnL','bounce','rep','forever','if','stop','say','sound','wait','add'],conds:['star'],max:14,need:'free'}
+];
+var cur=0,script=[],tgt=script,running=false,S={},done={},mute=false,ac,t0=0,D=480,dragged=false;
+function beep(f,d){if(mute)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();var o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+(d||.12))}catch(e){}}
+document.addEventListener('click',function(){if(t0)return;t0=Date.now();setInterval(function(){var s=Math.floor((Date.now()-t0)/1000),m=Math.floor(s/60),r=s%60;$('#clock').textContent='⏱ '+(m<10?'0':'')+m+':'+(r<10?'0':'')+r},1000)});
+$('#mute').onclick=function(){mute=!mute;this.textContent=mute?'🔇 Sound off':'🔊 Sound on'};
+$('#spd').onclick=function(){D=D===480?200:480;this.textContent=D===480?'🐢 Slow':'🐇 Fast'};
+function msg(t,k){var m=$('#msg');m.textContent=t;m.className=k||''}
+function cnt(l){return l.reduce(function(a,n){return a+1+cnt(n.body)},0)}
+function has(l,ts){return l.some(function(n){return ts.indexOf(n.t)>-1||has(n.body,ts)})}
+function fl(l,n){if(l.indexOf(n)>-1)return l;for(var k=0;k<l.length;k++){var r=fl(l[k].body,n);if(r)return r}return null}
+function nav(){var n=$('#nav');n.innerHTML='';LV.forEach(function(l,i){var b=document.createElement('button');b.textContent=done[i]?'✓':i+1;b.className=(done[i]?'done ':'')+(i===cur?'cur':'');b.setAttribute('aria-label','Mission '+(i+1));b.onclick=function(){if(!running)load(i)};n.appendChild(b)})}
+function pos(el,x,y){el.style.left=((x+.5)/W*100)+'%';el.style.top=((H-y-.5)/H*100)+'%'}
+function sprite(id,x,y,h){var d=document.createElement('div');d.className='sp';d.id=id;pos(d,x,y);d.innerHTML=h;$('#stage').appendChild(d)}
+function hud(){$('#hx').textContent=Math.round(S.x);$('#hy').textContent=Math.round(S.y);$('#hd').textContent=(Math.round(S.dir)===-180?180:Math.round(S.dir));$('#hs').textContent=S.n||0;$('#hb').textContent=cnt(script)}
+function nd(d){return((d+180)%360+360)%360-180}
+function drawStage(){var L=LV[cur];$('#stage').innerHTML='';
+if(L.goal)sprite('goal',L.goal[0],L.goal[1],L.ge);
+L.stars.forEach(function(p,i){sprite('s'+i,p[0],p[1],'⭐')});
+sprite('cat',L.start[0],L.start[1],'<span>🐱</span><i class="arr">▲</i>');
+S={x:L.start[0],y:L.start[1],dir:L.start[2],disp:L.start[2],got:{},n:0,steps:0,rot:0,say:0,atSay:0,atSnd:0};$('#cat .arr').style.transform='rotate('+S.disp+'deg)';hud()}
+function load(i){cur=i;var L=LV[i];script=L.pre?L.pre():[];tgt=script;$('#st').textContent=L.t;$('#sp').textContent=L.s;$('#tip').textContent=L.tip;drawStage();msg('Drag blocks into your code, or tap them!');nav();rs()}
+function rs(){renderScript();renderPal();hud()}
+function zone(l){var z=document.createElement('div');z.className='zone'+(tgt===l?' tgt':'');z._list=l;z.onclick=function(e){e.stopPropagation();if(!running){tgt=l;rs()}};return z}
+function cyc(n,list,k){return function(e){e.stopPropagation();if(running)return;n[k]=list[(list.indexOf(n[k])+1)%list.length];rs()}}
+function rl(list,cont){list.forEach(function(n){var b=B[n.t],w=document.createElement('div');w.className='blk '+b.c;w.dataset.id=n.id;
+var h=document.createElement('div');h.className='row';h.addEventListener('pointerdown',function(e){if(e.target.closest('button'))return;startDrag(e,{node:n,el:w})});
+var parts=b.p.split('#');h.append((b.i?b.i+' ':'')+parts[0]);
+if(b.vals){var q=document.createElement('button');q.textContent=n.v;q.setAttribute('aria-label','Change number');q.onclick=cyc(n,b.vals,'v');h.appendChild(q);h.append(parts[1])}
+if(b.rn){var c=document.createElement('button');c.textContent=n.n;c.setAttribute('aria-label','Change repeat number');c.onclick=cyc(n,[1,2,3,4,5,6,7,8,9,10],'n');h.appendChild(c)}
+if(b.cond){var cb=document.createElement('button');cb.textContent=CN[n.cond];h.appendChild(cb);h.append(' then')}
+var x=document.createElement('button');x.className='x';x.textContent='✕';x.setAttribute('aria-label','Remove block');x.onclick=function(e){e.stopPropagation();if(running)return;var l=fl(script,n);if(l){l.splice(l.indexOf(n),1);tgt=l}rs()};h.appendChild(x);w.appendChild(h);
+if(b.C){var z=zone(n.body);rl(n.body,z);w.appendChild(z)}
+cont.appendChild(w)})}
+function renderScript(){var s=$('#script');s.innerHTML='<div class="hat">when 🏁 clicked</div>';var r=document.createElement('div');r.className='zone'+(tgt===script?' tgt':'');r.style.marginLeft='0';r._list=script;r.style.minHeight='110px';r.onclick=function(){if(!running){tgt=script;rs()}};rl(script,r);s.appendChild(r)}
+function renderPal(){var p=$('#pal');p.innerHTML='';var L=LV[cur],full=cnt(script)>=L.max;L.allow.forEach(function(k){var b=document.createElement('button');b.className=B[k].c;b.textContent=lab(k);b.disabled=running||full;
+b.addEventListener('pointerdown',function(e){startDrag(e,{kind:k,label:lab(k),cls:B[k].c})});
+b.onclick=function(){if(dragged)return;tgt.push(mk(k));var n=tgt[tgt.length-1];if(B[k].C)tgt=n.body;beep(520,.08);rs()};p.appendChild(b)})}
+function startDrag(e,d){if(running||(e.pointerType==='mouse'&&e.button!==0))return;
+var x0=e.clientX,y0=e.clientY,on=false,ghost=null,ph=null,z0=null,idx=0,trash=false;
+function clr(){if(ph){ph.remove();ph=null}document.querySelectorAll('.zone.over').forEach(function(z){z.classList.remove('over')});$('#pal').classList.remove('trash');z0=null;trash=false}
+function mv(ev){
+if(!on){if(Math.hypot(ev.clientX-x0,ev.clientY-y0)<7)return;on=true;dragged=true;document.body.classList.add('dragging');
+ghost=document.createElement('div');ghost.className='ghost blk '+(d.node?B[d.node.t].c:d.cls);ghost.textContent=d.node?(B[d.node.t].i||'')+' '+B[d.node.t].p.replace('#',d.node.v):d.label;document.body.appendChild(ghost);if(d.el)d.el.style.opacity='.3'}
+ghost.style.left=(ev.clientX+10)+'px';ghost.style.top=(ev.clientY+10)+'px';
+clr();var els=document.elementsFromPoint(ev.clientX,ev.clientY),z=null;
+for(var i=0;i<els.length;i++){var q=els[i];if(q.classList&&q.classList.contains('zone')&&!(d.el&&d.el.contains(q))){z=q;break}}
+if(z){z0=z;var kids=z.querySelectorAll(':scope > .blk');idx=kids.length;
+for(var k=0;k<kids.length;k++){var r=kids[k].getBoundingClientRect();if(ev.clientY<r.top+r.height/2){idx=k;break}}
+ph=document.createElement('div');ph.className='ph';z.insertBefore(ph,kids[idx]||null);z.classList.add('over')}
+else if(d.node&&els.some(function(q){return q.closest&&q.closest('#pal')})){trash=true;$('#pal').classList.add('trash')}}
+function end(){window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',cancel);setTimeout(function(){dragged=false},60);
+if(!on)return;if(ghost)ghost.remove();document.body.classList.remove('dragging')}
+function cancel(){z0=null;trash=false;end();clr();rs()}
+function up(){var list=z0&&z0._list,tr=trash,i=idx;end();clr();
+if(list){if(d.node){var ol=fl(script,d.node);if(ol){var oi=ol.indexOf(d.node);ol.splice(oi,1);if(ol===list&&oi<i)i--;list.splice(i,0,d.node);tgt=list}}
+else if(cnt(script)>=LV[cur].max)msg('That is all the blocks you can use. Remove one first!','bad');
+else{var n=mk(d.kind);list.splice(i,0,n);tgt=B[d.kind].C?n.body:list;beep(520,.08)}}
+else if(tr){var o2=fl(script,d.node);if(o2){o2.splice(o2.indexOf(d.node),1);tgt=script}}
+if(on)rs()}
+window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',cancel)}
+function hl(id){document.querySelectorAll('#script .blk').forEach(function(e){e.classList.toggle('on',id&&e.dataset.id==id)})}
+function starNear(x,y){return LV[cur].stars.some(function(p){return p[0]===x&&p[1]===y})}
+function nearGoal(){var g=LV[cur].goal;return!!g&&g[0]===S.x&&g[1]===S.y}
+function place(){var b=$('#cat');pos(b,S.x,S.y);b.querySelector('.arr').style.transform='rotate('+S.disp+'deg)';hud()}
+function setDir(nv){nv=nd(nv);S.disp+=nd(nv-S.dir);S.dir=nv}
+var sleep=function(ms){return new Promise(function(r){setTimeout(r,ms)})};
+function fail(m){throw{fail:m}}
+async function ex(l){for(var i=0;i<l.length;i++)await one(l[i])}
+async function one(n){if(!running)throw{stop:1};if(++S.steps>400)fail('The code never stopped! Try adding 🛑 stop all inside an if block.');hl(n.id);var t=n.t,L=LV[cur];
+if(t==='move'){var a=S.dir*Math.PI/180,nx=S.x+Math.round(Math.sin(a)),ny=S.y+Math.round(Math.cos(a));
+if(nx>=0&&nx<W&&ny>=0&&ny<H){S.x=nx;S.y=ny;if(!L.manual)L.stars.forEach(function(p,j){if(!S.got[j]&&p[0]===S.x&&p[1]===S.y){S.got[j]=1;var e=$('#s'+j);e.classList.add('pop');setTimeout(function(){e.style.visibility='hidden'},350);beep(900,.12)}});beep(420,.07)}else beep(160,.12);
+place();await sleep(D)}
+else if(t==='turnR'||t==='turnL'){setDir(S.dir+(t==='turnR'?90:-90));S.rot+=90;place();beep(330,.06);await sleep(D*.8)}
+else if(t==='bounce'){var a2=S.dir*Math.PI/180,bx=Math.round(Math.sin(a2)),by=Math.round(Math.cos(a2));if((S.x===W-1&&bx>0)||(S.x===0&&bx<0))setDir(-S.dir);else if((S.y===H-1&&by>0)||(S.y===0&&by<0))setDir(180-S.dir);place();await sleep(D*.4)}
+else if(t==='say'){S.say=1;if(nearGoal())S.atSay=1;var c=$('#cat'),bb=document.createElement('div');bb.className='bubble';bb.textContent='Hello!';c.appendChild(bb);beep(700,.12);await sleep(D*1.5);bb.remove()}
+else if(t==='sound'){S.snd=1;if(nearGoal())S.atSnd=1;$('#cat').classList.add('pop');beep(300,.25);await sleep(D*.8);$('#cat').classList.remove('pop')}
+else if(t==='wait')await sleep(D*1.2);
+else if(t==='add'){S.n++;hud();beep(700,.1);await sleep(D*.6)}
+else if(t==='stop')throw{halt:1};
+else if(t==='rep'){for(var j=0;j<n.n;j++){await ex(n.body);hl(n.id)}}
+else if(t==='forever'){for(;;){await ex(n.body);hl(n.id);if(++S.steps>400)fail('The code never stopped! Try adding 🛑 stop all inside an if block.');await sleep(60)}}
+else{await sleep(D*.4);if(starNear(S.x,S.y))await ex(n.body)}}
+function chk(){var L=LV[cur],g=Object.keys(S.got).length;
+if(L.need==='free'){if(cnt(script)<6)return'Use at least 6 blocks!';if(!has(script,['rep','forever']))return'Add a loop: repeat or forever.';if(!has(script,['turnR','turnL','point']))return'Add a turn block.';if(!S.say)return'Add a say block 💬.';if(!S.snd)return'Add a sound block 🔊.';return''}
+if(L.need==='spin')return S.rot<360?'The cat turned '+S.rot+' degrees. A full spin is 360!':!S.say?'Now make the cat say hello 💬.':'';
+if(L.need==='both')return!(S.atSay&&S.atSnd&&nearGoal())?'Walk to your friend first, then say 💬 and play 🔊 when you arrive!':'';
+if(L.need==='score'){if(S.n!==L.stars.length)return'Score is '+S.n+' but there are '+L.stars.length+' stars. Change the score once for each star!';return(!L.manual&&g<L.stars.length)?'You missed a star ⭐.':''}
+if(g<L.stars.length)return'You collected '+g+' of '+L.stars.length+' stars ⭐. Check your numbers and turns!';return''}
+async function run(){if(running){running=false;return}
+if(!script.length){msg('Add some blocks first!','bad');return}
+drawStage();running=true;$('#run').textContent='⏹ Stop';$('#run').className='stop';renderPal();msg('Go, cat, go!');
+try{await ex(script);var e=chk();if(e)msg(e,'bad');else win()}
+catch(x){if(x.halt){var e2=chk();if(e2)msg(e2,'bad');else win()}else if(x.fail)msg(x.fail,'bad');else if(x.stop)msg('Stopped.');else throw x}
+running=false;hl(null);$('#run').textContent='🏁 Go!';$('#run').className='';renderPal()}
+function win(){var L=LV[cur],ok=!L.par||cnt(script)<=L.par,st=ok?3:2;done[cur]=1;nav();msg('You did it!','good');beep(880,.15);setTimeout(function(){beep(1175,.25)},180);
+var c=$('#card');
+if(cur===LV.length-1){c.innerHTML='<div class="big">🎉🏆🎉</div><h2>You finished the lab!</h2><div class="cert"><p>This certificate goes to</p><h2 id="nm">Scratch Star</h2><p>for finishing 10 Scratch missions with the cat! 🐱</p></div><input id="name" placeholder="Type your name" maxlength="20" aria-label="Your name"><br><button id="pr">🖨 Print</button><button id="again">Play again</button>';
+$('#name').oninput=function(){$('#nm').textContent=this.value||'Scratch Star'};$('#pr').onclick=function(){window.print()};$('#again').onclick=function(){done={};$('#ov').classList.remove('show');load(0)}}
+else{c.innerHTML='<div class="big">🎉</div><h2>Mission complete!</h2><div class="big">'+'⭐'.repeat(st)+'☆'.repeat(3-st)+'</div><p>'+(ok?'Super neat code!':'Great job! Can you do it with '+L.par+' blocks or fewer?')+'</p><button id="nx">Next mission ▶</button><button id="rt">Stay here</button>';
+$('#nx').onclick=function(){$('#ov').classList.remove('show');load(cur+1)};$('#rt').onclick=function(){$('#ov').classList.remove('show')}}
+$('#ov').classList.add('show');setTimeout(function(){var f=c.querySelector('button');if(f)f.focus()},50)}
+$('#run').onclick=run;
+$('#reset').onclick=function(){if(!running){drawStage();msg('The cat is back at the start.')}};
+$('#clear').onclick=function(){if(!running){script.length=0;tgt=script;drawStage();rs();msg('All clear! Drag a block to start.')}};
+load(0);
+</script>
+</body>
+</html>
